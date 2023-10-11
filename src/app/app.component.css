@@ -1,0 +1,71 @@
+#contentWrapper {
+    width: calc(100% - 40px);
+    height: calc(100vh - 80px);
+    margin: 0px 8px 0px 8px;
+}
+
+#editableWrapper {
+    width: calc(100% - 40px);
+    height: calc(450px);
+    margin: 0px 8px 0px 8px;
+}
+
+.app-editable-btn-group {
+    margin: 5px 0px;
+}
+
+.app-editable-btn-group>button {
+    margin-right: 8px;
+    margin-bottom: 8px;    
+}
+
+/* 
+.app-editable-btn-group>button:not(:first-child) {
+    margin-right: 8px;
+    margin-bottom: 8px;
+}
+*/
+
+#contentText {
+    width: 100%;
+    height: 100%;
+    font-size: 16px;
+    overflow: auto;
+    resize: none;
+}
+
+#editableText {
+    width: 100%;
+    height: 100%;
+    font-size: 16px;
+    overflow: auto;
+    resize: none;
+}
+
+.app-grid {
+    display: grid;
+    column-gap: 15px;
+    row-gap: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 150px));
+    margin: 8px;
+}
+
+.app-model-info-grid {
+    display: grid;
+    column-gap: 15px;
+    row-gap: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 90px));
+    margin: 8px;
+}
+
+.app-grid-element {
+    border-radius: 5px;
+    background: #00000010;
+    width: 110px;
+    height: 110px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    user-select: none;
+}

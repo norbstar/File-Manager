@@ -1,1 +1,106 @@
 /* You can add global styles to this file, and also import other style files */
+@import "https://fonts.googleapis.com/css?family=Montserrat:400,700|Raleway:300,400";
+
+body {
+    font-family: "Raleway";
+    font-size: 14px;
+    margin: 0px;
+}
+
+.app-btn-group {
+    margin: 8px;
+}
+
+.app-btn-group>button {
+    margin-right: 8px;
+    margin-bottom: 8px;    
+}
+
+/* 
+.app-btn-group>button:not(:first-child) {
+    margin-right: 8px;
+    margin-bottom: 8px;
+}
+*/
+
+.app-btn {
+    background-color: #47A2FFAA;
+    border-radius: 8px;
+    border-style: none;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-family: "Raleway";
+    font-size: 14px;
+    font-weight: 500;
+    height: 40px;
+    line-height: 20px;
+    list-style: none;
+    margin: 0px 0px;
+    outline: none;
+    padding: 10px 16px;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    transition: color 100ms;
+    vertical-align: baseline;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+  
+.app-btn:hover,
+.app-btn:focus {
+    background: #47A2FF;
+}
+
+.app-btn.selected {
+    background: #47A2FF;
+}
+
+.app-btn-disabled {
+    background-color: lightgray !important;
+}
+
+.app-btn-disabled:hover {
+    background-color: lightgray !important;
+}
+
+textarea {
+    font-size: 14px;
+    font-family: "Raleway";
+    border-radius: 6px;
+    line-height: 1.5;
+    padding: 5px 10px;
+    transition: box-shadow 100ms ease-in, border 100ms ease-in, background-color 100ms ease-in;
+    border: 0px solid white;
+    color: rgb(14, 14, 16);
+    background: #DEE1E2;
+    display: inline-block;
+    height: 25px;
+}
+
+textarea:hover,
+textarea:focus {
+    border: 0px solid white;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+  
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #00000050;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #00000075; 
+}

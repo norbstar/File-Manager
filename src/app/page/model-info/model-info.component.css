@@ -1,0 +1,43 @@
+.app-model-info {
+    height: 90px;
+    width: 150px;
+    cursor: pointer;
+}
+
+.app-model-info-container {
+    /* background: #4598C2; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.app-model-name {
+    font-size: 1.2em;
+    color: white;
+    z-index: 1;
+}
+
+.app-model-online { 
+    border: 5px solid #32a6cd;
+}
+
+.app-model-offline {
+    border: 5px solid grey;
+}
+
+.app-model-status {
+    position: absolute;
+    color: white;
+    z-index: 1;
+}
+
+.app-model-image {
+    position: absolute;
+    max-width: 150px;
+    height: auto;
+    border-radius: 45px;
+}

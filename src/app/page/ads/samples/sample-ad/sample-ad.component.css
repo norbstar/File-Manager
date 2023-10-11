@@ -1,0 +1,33 @@
+.app-ad-container {
+    background: #4598C2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    border-radius: 5px;
+}
+
+.app-ad-id {
+    position: relative;
+    background: #00000010;
+    color: white;
+    top: -45px;
+    left: -5px;
+    margin: 15px;
+    padding: 5px;
+    font-size: 2em;
+    border-radius: 5px;
+}
+
+.app-ad-name {
+    height: 100%;
+    background: #FF505029;
+    width: 200px;
+    padding: 0px 5px 0px 5px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+}

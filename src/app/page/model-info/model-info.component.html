@@ -1,0 +1,6 @@
+<div class="app-model-info" (click)="launchURL()">
+    <div class="app-model-info-container">
+        <div class="app-model-name">{{ modelInfo.name }}</div>
+        <img class="app-model-image" [src]="modelInfo.image" [ngClass]="{'app-model-online': isOnline(), 'app-model-offline': !isOnline()}">
+    </div>
+</div>
