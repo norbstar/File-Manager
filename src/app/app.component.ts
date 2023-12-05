@@ -35,8 +35,10 @@ export class AppComponent implements OnInit {
   editableText: string;
   showEditableWrapper: boolean;
   labels: string[];
-  modelInfoSet: ModelInfo[];
+  // modelInfoSet: ModelInfo[];
+  modelInfoSet: Set<ModelInfo>;
   appJsonFileId: string;
+  enableModelInfoRefresh: boolean = true;
 
   constructor(private windowRefService: WindowRefService, private httpService: HttpService, private httpClient: HttpClient) { }
 
@@ -122,7 +124,24 @@ export class AppComponent implements OnInit {
     return text.match(new RegExp(start + "(.*)" + end));
   }
 
-  scrapeUrl(baseUrl: string, modelName: string): Promise<ModelInfo> {
+  scrapePageUrl(baseUrl: string, page: number): Promise<string[]> {
+    const url: string = `${baseUrl}?page=[${page}]`;
+    const modelNames: string[] = [];
+
+    return new Promise<string[]>((resolve, reject) => {
+      this.httpService.getRaw(url).subscribe(
+        (response: string) => {
+          const content: string = response.trim().toLowerCase();
+          console.log(`Content ${content}`);
+          resolve(modelNames);
+        },
+        (error) => {
+          reject(`Error scraping page ${page} [${error.message}]`);
+        });
+    });
+  }
+
+  scrapeModelUrl(baseUrl: string, modelName: string): Promise<ModelInfo> {
     const url: string = `${baseUrl}/${modelName}`;
 
     return new Promise<ModelInfo>((resolve, reject) => {
@@ -146,7 +165,7 @@ export class AppComponent implements OnInit {
   
   getModelInfo(model: string) : Promise<ModelInfo> {
     return new Promise<ModelInfo>((resolve, reject) => {
-      this.scrapeUrl('https://www.sexlikereal.com/vr-cam-girls', model).then(
+      this.scrapeModelUrl('https://www.sexlikereal.com/vr-cam-girls', model).then(
         (modelInfo: ModelInfo) => {
           resolve(modelInfo);
         }
@@ -156,7 +175,7 @@ export class AppComponent implements OnInit {
     });
   }
 
-  scrapeUrlOld(baseUrl: string, modelName: string): void {
+  scrapeModelUrlOld(baseUrl: string, modelName: string): void {
     const url: string = `${baseUrl}/${modelName}`;
 
     console.log(`Scraping info on ${modelName}`);
@@ -206,7 +225,7 @@ export class AppComponent implements OnInit {
   getModelInfoOld(model: string) : Promise<ModelInfo> {
     return new Promise<ModelInfo>((resolve, reject) => {
     /*
-      this.scrapeUrl('https://www.sexlikereal.com/vr-cam-girls', model).then(
+      this.scrapeModelUrl('https://www.sexlikereal.com/vr-cam-girls', model).then(
         (modelInfo: ModelInfo) => {
           resolve(modelInfo);
         }
@@ -222,7 +241,7 @@ export class AppComponent implements OnInit {
     });
     */
 
-      this.scrapeUrl('https://www.sexlikereal.com/vr-cam-girls', model).then(
+      this.scrapeModelUrl('https://www.sexlikereal.com/vr-cam-girls', model).then(
         (modelInfo: ModelInfo) => {
           resolve(modelInfo);
         }
@@ -232,39 +251,62 @@ export class AppComponent implements OnInit {
     });
   }
 
+  /*
+  reviewModelInfoSet(): void {
+    let set: string = '';
+
+    this.modelInfoSet.forEach((modelInfo: ModelInfo) => {
+      if (set.length > 0) {
+        set = set.concat(`, ${modelInfo.name}`);
+      } else {
+        set = `[${modelInfo.name}`;
+      }
+    });
+
+    set = set.concat(`]`);
+
+    console.log(`[reviewModelInfoSet] Set: ${set}`);
+  }
+  */
+
+  prepRefresh(): void {
+    if (!this.enableModelInfoRefresh) return;
+
+    setTimeout(() => {
+      let idx = 0;
+
+      this.modelInfoSet.forEach((modelInfo: ModelInfo) => {
+        console.log(`[onClickScrapeHTML:setTimeout] Model: ${modelInfo.name}`);
+
+        this.getModelInfo(modelInfo.name).then(
+          (modelInfo: ModelInfo) => {
+            if (modelInfo == null) return;
+            this.modelInfoSet[idx++] = modelInfo;
+          },
+          (error) => {
+            console.error(error);
+          }
+        );
+      });
+
+      this.prepRefresh();
+    }, 10000);
+  }
+
   onClickScrapeHTML(): void {
     this.hideContent();
     this.hideGrid();
     this.revealModelInfoGrid();
     
-    this.modelInfoSet.splice(0);
+    // this.modelInfoSet.splice(0);
+    this.modelInfoSet.clear();
 
-    // let models: string[] = [
-    //   'chloeharper',
-    //   'julietacastell',
-    //   'christynaross',
-    //   'violetlet',
-    //   'juliiiafan',
-    //   'kimberlyworld',
-    //   'your_sweet_secret',
-    //   'lesaismore',
-    //   'foxyshy',
-    //   'margotbennet',
-    //   'imsofa',
-    //   'missmooon',
-    //   'kristiimax',
-    //   'coldblondy',
-    //   'petitelexyy',
-    //   'devilishdiamond',
-    //   'jessyrays',
-    //   'P_U_M_A_',
-    //   'NicoleSarahX',
-    //   'eifyy'
-    // ];
+    let models: string[] = new Models().names;
 
-    // let models: string[] = new Models().names;
+    models.forEach((model: string) => {
+      console.log(`[onClickScrapeHTML] Model: ${model}`);
 
-    new Models().names.forEach((model: string) => {
+    // new Models().names.forEach((model: string) => {
       //try {       
       //} catch(error) {
       //  console.log(error);
@@ -272,7 +314,7 @@ export class AppComponent implements OnInit {
       //  console.log(`Model Info: ${JSON.stringify(this.modelInfoSet[this.modelInfoSet.length - 1], null, 2)}`);
       //}
 
-      // this.scrapeUrl('https://www.sexlikereal.com/vr-cam-girls', model).then(
+      // this.scrapeModelUrl('https://www.sexlikereal.com/vr-cam-girls', model).then(
       //   (modelInfo: ModelInfo) => {
       //     this.modelInfoSet.push(modelInfo);
       //   }
@@ -283,7 +325,9 @@ export class AppComponent implements OnInit {
       this.getModelInfo(model).then(
         (modelInfo: ModelInfo) => {
           if (modelInfo == null) return;
-          this.modelInfoSet.push(modelInfo);
+          // this.modelInfoSet.push(modelInfo);
+          this.modelInfoSet.add(modelInfo);
+          // this.reviewModelInfoSet();
         },
         (error) => {
           console.error(error);
@@ -291,25 +335,63 @@ export class AppComponent implements OnInit {
       );
     });
 
-    // setTimeout(() => {
-    //   let idx = 0;
+    this.prepRefresh();
 
-    //   models.forEach((model: string) => {  
-    //     this.getModelInfo(model).then(
-    //       (modelInfo: ModelInfo) => {
-    //         if (modelInfo != null) {
-    //           this.modelInfoSet[idx++] = modelInfo;
-    //         }
-    //       }
-    //     );
-    //   });
-    // }, 10000);
+    if (0) {
+    if (!this.enableModelInfoRefresh) return;
+
+    setTimeout(() => {
+      let idx = 0;
+
+      /*
+      models.forEach((model: string) => {
+        // console.log(`[onClickScrapeHTML:setTimeout] Model: ${model}`);
+        
+        this.getModelInfo(model).then(
+          (modelInfo: ModelInfo) => {
+            if (modelInfo == null) return;
+            this.modelInfoSet[idx++] = modelInfo;
+          },
+          (error) => {
+            console.error(error);
+          }
+        );
+      });
+      */
+
+      /*
+      this.modelInfoSet.forEach((modelInfo: ModelInfo) => {
+        console.log(`[onClickScrapeHTML:setTimeout] Model: ${modelInfo.name}`);
+
+        this.getModelInfo(modelInfo.name).then(
+          (modelInfo: ModelInfo) => {
+            if (modelInfo == null) return;
+            this.modelInfoSet[idx++] = modelInfo;
+          },
+          (error) => {
+            console.error(error);
+          }
+        );
+      });
+      */
+    }, 10000);
+    }
   }
 
   onClickRecursiveMediaScraper(): void {
     this.hideContent();
     this.hideGrid();
     this.hideModelInfoGrid();
+
+    this.scrapePageUrl('https://www.sexlikereal.com/vr-cam-girls', 1).then(
+      (modelNames: string[]) => {
+        if (modelNames == null) return;
+        console.log(modelNames);
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
 
     // TODO
   }
@@ -475,7 +557,8 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.labels = [];
-    this.modelInfoSet = [];
+    // this.modelInfoSet = [];
+    this.modelInfoSet = new Set<ModelInfo>();
 
     for (let itr = 0; itr < 25; itr++) {
       this.labels.push(`Element ${itr+1}`);
